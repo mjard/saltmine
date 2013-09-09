@@ -1,0 +1,52 @@
+body{
+        font-family: 'Open Sans', sans-serif;
+}
+
+h1{
+    font-weight: lighter;
+    font-size: 3em;
+    letter-spacing: 0.2em;
+    line-height: 1.5em;
+    margin: 0;
+}
+
+#main {
+    background-color: #ecf0f1;
+    width: 800px;
+    margin: 0 0 0 -400px;
+    left: 50%;
+    position: absolute;
+    padding: 10px;
+}
+
+.header{
+    text-align: center;
+    padding: 0 10px 10px 10px;
+    background-color: #1abc9c;
+    color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+#betform{
+    background-color: #95a5a6;
+    padding: 10px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    clear: both;
+}
+
+.spacy{
+    padding: 0 10px 0 10px;
+}
+
+#videoEmbed{
+    height: 500px;
+    margin: 20px;
+}
+
+#live_embed_player_flash {
+width: 100%;
+}
