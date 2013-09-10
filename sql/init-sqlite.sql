@@ -1,43 +1,56 @@
-ATTACH "salty.db" as salty;
+ATTACH "salty.db" AS salty;
 
+DROP TABLE IF EXISTS salty.user;
 CREATE TABLE
-    IF NOT EXISTS
     salty.user (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
-        name        TEXT,
-        password    TEXT,
-        email       TEXT,
-        join_date   INTEGER,
-        last_login  INTEGER,
+        name        TEXT NOT NULL UNIQUE,
+        email       TEXT NOT NULL UNIQUE,
+        password    TEXT NOT NULL,
+        join_date   INTEGER DEFAULT CURRENT_TIMESTAMP,
+        last_login  INTEGER DEFAULT CURRENT_TIMESTAMP,
         balance     INTEGER
     );
 
+DROP TABLE IF EXISTS salty.eventstatus;
 CREATE TABLE
-    IF NOT EXISTS
+    salty.eventstatus (
+        id      INTEGER PRIMARY KEY AUTOINCREMENT,
+        code    INTEGER,
+        status  TEXT
+    );
+
+INSERT OR REPLACE INTO salty.eventstatus(code, status) VALUES (0, "Closed");
+INSERT OR REPLACE INTO salty.eventstatus(code, status) VALUES (1, "Open");
+INSERT OR REPLACE INTO salty.eventstatus(code, status) VALUES (2, "Finished");
+
+DROP TABLE IF EXISTS salty.event;
+CREATE TABLE
     salty.event (
         id      INTEGER PRIMARY KEY AUTOINCREMENT,
-        status  TEXT,
-        created TEXT
+        status  INTEGER,
+        created INTEGER DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(status) REFERENCES "salty.eventstatus"(id)
     );
 
+DROP TABLE IF EXISTS salty.stream;
 CREATE TABLE
-    IF NOT EXISTS
     salty.stream (
         id      INTEGER PRIMARY KEY AUTOINCREMENT,
-        name    TEXT,
-        url     TEXT
+        name    TEXT NOT NULL,
+        url     TEXT NOT NULL UNIQUE
     );
 
+DROP TABLE IF EXISTS salty.entrant;
 CREATE TABLE
-    IF NOT EXISTS
     salty.entrant (
-        name    TEXT,
+        name    TEXT NOT NULL,
         stream  INTEGER,
         FOREIGN KEY(stream) REFERENCES "salty.stream"(id)
     );
 
+DROP TABLE IF EXISTS salty.bet;
 CREATE TABLE
-    IF NOT EXISTS
     salty.bet (
         user    INTEGER,
         event   INTEGER,
@@ -49,8 +62,8 @@ CREATE TABLE
         FOREIGN KEY(entrant) REFERENCES "salty.entrant"(id)
     );
  
+DROP TABLE IF EXISTS salty.participant;
 CREATE TABLE
-    IF NOT EXISTS
     salty.participant (
         event   INTEGER,
         entrant INTEGER,
