@@ -1,16 +1,17 @@
 package main
 
 import (
-	//"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/sessions"
 )
 
 var store = sessions.NewCookieStore([]byte("something-not-very-secret"))
 var templates = template.Must(template.ParseGlob("templates/*.html"))
+var bookie = NewLiteBookie(os.Stderr, os.Stdout)
 
 func betHandler(w http.ResponseWriter, r *http.Request, s *sessions.Session) {
 	user := s.Values["username"]
@@ -50,6 +51,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	bookie.Open("salty.db")
 	http.HandleFunc("/", mainHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.Handle("/logout", ValidateSession(logoutHandler, "/"))
