@@ -7,7 +7,6 @@ import (
 	"log"
 
 	_ "code.google.com/p/go-sqlite/go1/sqlite3"
-
 )
 
 type LiteBookie struct {
@@ -55,4 +54,25 @@ func (b *LiteBookie) UserRegister(user, email, password string) (err error) {
 	tx.Commit()
 
 	return nil
+}
+
+func (b *LiteBookie) UserLogin(user, password string) {
+}
+
+func (b *LiteBookie) EventCreate() {
+}
+
+func (b *LiteBookie) EventOpen() {
+}
+
+func (b *LiteBookie) EventClose() {
+}
+
+func (b *LiteBookie) EventCancel() {
+}
+
+func (b *LiteBookie) EventList() {
+}
+
+func (b *LiteBookie) EventBet() {
 }
