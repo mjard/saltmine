@@ -7,6 +7,7 @@ import (
 	"log"
 
 	_ "code.google.com/p/go-sqlite/go1/sqlite3"
+	"code.google.com/p/go.crypto/bcrypt"
 )
 
 type LiteBookie struct {
@@ -46,7 +47,13 @@ func (b *LiteBookie) UserRegister(user, email, password string) (err error) {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user, email, password)
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		b.elog.Println(err)
+		return errors.New("Temporary Registration Failure")
+	}
+
+	_, err = stmt.Exec(user, email, hash)
 	if err != nil {
 		b.elog.Println(err)
 		return errors.New("Username or Email address not unique")
@@ -75,4 +82,10 @@ func (b *LiteBookie) EventList() {
 }
 
 func (b *LiteBookie) EventBet() {
+}
+
+func (b *LiteBookie) StreamCreate() {
+}
+
+func (b *LiteBookie) StreamList() {
 }
