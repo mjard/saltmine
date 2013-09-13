@@ -1,10 +1,12 @@
-Allow accounts
-Allow account creation
-Actually take bets
-Apply bets
-Do Maths
-Give monies
-Make visible
-Write htmls
-Write css
-Write javascripts
+Frontend:
+ + Account Creation
+ + Login Form
+ + Stream page clean up
+ + Websockets
+
+Backend:
+ + Account Creation
+ + Global Stream for now
+ + Bets
+ + Payouts
+ + Websocket notification
