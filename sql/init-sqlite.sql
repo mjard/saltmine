@@ -20,9 +20,9 @@ CREATE TABLE
         status  TEXT
     );
 
-INSERT OR REPLACE INTO salty.eventstatus(code, status) VALUES (0, "Closed");
-INSERT OR REPLACE INTO salty.eventstatus(code, status) VALUES (1, "Open");
-INSERT OR REPLACE INTO salty.eventstatus(code, status) VALUES (2, "Finished");
+INSERT INTO salty.eventstatus(code, status) VALUES (0, "Closed");
+INSERT INTO salty.eventstatus(code, status) VALUES (1, "Open");
+INSERT INTO salty.eventstatus(code, status) VALUES (2, "Finished");
 
 DROP TABLE IF EXISTS salty.event;
 CREATE TABLE
