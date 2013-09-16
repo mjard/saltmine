@@ -92,6 +92,7 @@ func (b *LiteBookie) UserLogin(user, password string) (err error) {
 }
 
 func (b *LiteBookie) EventCreate() {
+	const query = "INSERT INTO event"
 }
 
 func (b *LiteBookie) EventOpen() {
