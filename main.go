@@ -52,6 +52,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	bookie.Open("salty.db")
+
 	http.HandleFunc("/", mainHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.Handle("/logout", ValidateSession(logoutHandler, "/"))

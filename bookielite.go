@@ -10,6 +10,12 @@ import (
 	"code.google.com/p/go.crypto/bcrypt"
 )
 
+const (
+	EventClosed   = 0
+	EventOpened   = 1
+	EventFinished = 2
+)
+
 type LiteBookie struct {
 	db   *sql.DB
 	elog *log.Logger
@@ -48,8 +54,8 @@ func (b *LiteBookie) Open(path string) (err error) {
 	return err
 }
 
-func (b *LiteBookie) UserRegister(user, email, password string) (err error) {
-	const query = "INSERT INTO user(name, email, password) VALUES(?,?,?);"
+func (b *LiteBookie) UserRegister(user, email, password string, balance int) (err error) {
+	const query = "INSERT INTO user(name, email, password, balance) VALUES(?,?,?,?);"
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -57,7 +63,7 @@ func (b *LiteBookie) UserRegister(user, email, password string) (err error) {
 		return errors.New("Temporary Registration Failure")
 	}
 
-	_, err = b.sqlexec(query, user, email, hash)
+	_, err = b.sqlexec(query, user, email, hash, balance)
 	// could be a lie, fix this by recording what stage the error occurred
 	if err != nil {
 		return errors.New("Username or Email address not unique")
@@ -67,7 +73,7 @@ func (b *LiteBookie) UserRegister(user, email, password string) (err error) {
 }
 
 func (b *LiteBookie) UserLogin(user, password string) (err error) {
-	const query = "SELECT password from user WHERE name=?;"
+	const query = "SELECT password FROM user WHERE name=?;"
 	const update = "UPDATE user SET last_login=current_timestamp WHERE name=?;"
 
 	var hash []byte
@@ -91,23 +97,49 @@ func (b *LiteBookie) UserLogin(user, password string) (err error) {
 	return err
 }
 
-func (b *LiteBookie) EventCreate() {
-	const query = "INSERT INTO event"
+func (b *LiteBookie) EventCreate(streamId int) (err error) {
+	const query = `INSERT INTO event(stream, status) VALUES(?, 
+        (SELECT id FROM eventstatus WHERE code=?));`
+
+	_, err = b.sqlexec(query, streamId, EventOpened)
+	if err != nil {
+		b.elog.Println(err)
+		return errors.New("Unable to create event")
+	}
+
+	return err
 }
 
-func (b *LiteBookie) EventOpen() {
+func (b *LiteBookie) EventUpdateStatus(streamId, code int) (err error) {
+	const query = `UPDATE event SET status=
+        (SELECT id FROM eventstatus WHERE code=?) WHERE stream=?`
+
+	_, err = b.sqlexec(query, code, streamId)
+	if err != nil {
+		b.elog.Println(err)
+		return errors.New("Unable to update event")
+	}
+
+	return err
 }
 
-func (b *LiteBookie) EventClose() {
+func (b *LiteBookie) EventOpen(streamId int) {
+	b.EventUpdateStatus(streamId, EventOpened)
 }
 
-func (b *LiteBookie) EventCancel() {
+func (b *LiteBookie) EventFinalize(streamId int) {
+	b.EventUpdateStatus(streamId, EventFinished)
+}
+
+func (b *LiteBookie) EventCancel(streamId int) {
+	b.EventUpdateStatus(streamId, EventFinished)
 }
 
 func (b *LiteBookie) EventList() {
 }
 
-func (b *LiteBookie) EventBet() {
+// this is going to take a slice of Rankings eventually
+func (b *LiteBookie) EventBet(eventId, participantId, rank, bet int) {
 }
 
 func (b *LiteBookie) StreamCreate() {

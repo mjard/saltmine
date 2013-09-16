@@ -12,6 +12,9 @@ CREATE TABLE
         balance     INTEGER NOT NULL
     );
 
+INSERT INTO salty.user(name, email, password, balance) 
+VALUES ("test", "test@test.com", "$2a$10$.QepcCi3kH6kzpO5atX1jOtxBY2efxQB83rU899uYok7dEaTvIvtG", 1000);
+
 DROP TABLE IF EXISTS salty.stream;
 CREATE TABLE
     salty.stream (
@@ -20,6 +23,7 @@ CREATE TABLE
         url     TEXT NOT NULL
     );
 
+INSERT INTO salty.stream(name, url) VALUES ("SaltyBet", "http://www.justin.tv/widgets/live_embed_player.swf");
 
 DROP TABLE IF EXISTS salty.eventstatus;
 CREATE TABLE
@@ -28,7 +32,6 @@ CREATE TABLE
         code    INTEGER NOT NULL,
         status  TEXT NOT NULL
     );
-
 
 INSERT INTO salty.eventstatus(code, status) VALUES (0, "Closed");
 INSERT INTO salty.eventstatus(code, status) VALUES (1, "Open");
